@@ -3,196 +3,124 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.20/css/jquery.dataTables.min.css">
+    <link rel="" href="https://cdn.datatables.net/fixedheader/3.1.6/css/fixedHeader.dataTables.min.css">
 
-    <!-- searchPanes -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/1.0.1/css/searchPanes.dataTables.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <title>Uso de Fetch</title>
 
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/css/bootstrap.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.0/js/bootstrap.min.js"></script>
-
-    <!-- Datatables -->
-    <link rel="stylesheet" href="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.css">
-    <script src="https://cdn.datatables.net/v/bs4-4.1.1/dt-1.10.18/datatables.min.js"></script>
-
-     <!-- select -->
-     <link href="https://cdn.datatables.net/select/1.3.1/css/select.dataTables.min.css">
-
-
-
-
-<style>
-    table thead{
-	background: linear-gradient(to right, #f86700, #f9c180); 
-	color:white;
-	}
-    .seleccionada {
-  background-color: #00c8ff !important;
-}
-</style>
-
-
-</head>
-<body  class="container-fluid p-5">
-
-    <button id="borrarFiltros">Borrar filtros</button>
-
-<div class="table-responsive" id="example-container">
-    <table class="records_list table table-striped table-bordered table-hover" style="width: 100%;"  id="example">
-        <thead>
-            <tr>
-                {% for key in data[0].keys() %}
-                <th>{{ key }}</th>
-                {% endfor %}
-            </tr>
-
-        </thead>
-        <tbody>
-            {% for item in data %}
-            <tr class="fila">
-                {% for value in item.values() %}
-                <td>{{ value }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-
-        </tbody>
-        <tfoot>
-            <tr>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-                <th></th>
-            </tr>
-        </tfoot>
-    </table>
-</div>
-
-
-
-<!-- searchPanes   -->
-<script src="https://cdn.datatables.net/searchpanes/1.0.1/js/dataTables.searchPanes.min.js"></script>
-
-<!-- select -->
-<script src="https://cdn.datatables.net/select/1.3.1/js/dataTables.select.min.js"></script>  
-
-
-<script src="https://cdn.datatables.net/responsive/2.4.0/js/dataTables.responsive.min.js"></script>
-
-<script type="text/javascript">
-
-   
-
-$(document).ready(function() {
-  // Inicializar DataTables
-
-  //Mostrar filtros desplegables en el footer 
-  $('#example').DataTable({
-        initComplete: function () {
-            this.api()
-                .columns()
-                .every(function () {
-                    var column = this;
-                    var select = $('<select><option value=""></option></select>')
-                        .appendTo($(column.footer()).empty())
-                        .on('change', function () {
-                            var val = $.fn.dataTable.util.escapeRegex($(this).val());
- 
-                            column.search(val ? '^' + val + '$' : '', true, false).draw();
-                        });
- 
-                    column
-                        .data()
-                        .unique()
-                        .sort()
-                        .each(function (d, j) {
-                            select.append('<option value="' + d + '">' + d + '</option>');
-                        });
-                });
-        },
-    });
-  
-
-  //Cambio de idioma de los elemeentos
-
-  var settings = {
-    "dom": 'B<"float-left"i><"float-right"f>t<"float-left"l><"float-right"p><"clearfix">',
-    "responsive": false,
-    "language": {
-      "url": "https://cdn.datatables.net/plug-ins/1.10.19/i18n/Spanish.json"
-    },
-    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-    "order": [
-      [0, "desc"]
-    ]
-  }
-
-  // Inicializar DataTable
-  var table = $('#example').DataTable(settings);
-  
-  $('#example thead tr').clone(true).appendTo('#example thead');
-  
-  $('#example thead tr:eq(1) th').each(function (i) {
-     var title = $(this).text();
-     $(this).html('<input type="text" placeholder="Buscar...'+title+'" />');
-  
-     $( 'input', this ).on( 'keyup change', function () {
-        if ( table.column(i).search() !== this.value ) {
-            table
-                .column(i)
-                .search( this.value )
-                .draw();
+    <style>
+      body{
+        background-color: cornflowerblue;
+      }
+      table thead {
+            background:#302b63;
+            color:white;
         }
-     });
-  });
+    </style>
+</head>
+<body>
 
-  // Filtrar la tabla cuando se hace clic en cualquier celda
-  $('#example').on('click', 'td', function() {
-    table.search($(this).text()).draw();
-    
-  });
+    <input type="text" id="filtro" placeholder="Buscar">
+    <button id="aplicar-filtro">Filtrar</button>
 
-  // Borrar todos los filtros cuando se hace clic en el botón
-  $('#borrarFiltros').on('click', function() {
-    table.search('').draw();
-  });
+    <div class="container mt-4 shadow-lg p-3 mb-5 bg-body rounded table-responsive">
+      <table id="myTable" class="table table-bordered table-striped table-hover table-xl">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Industry</th>
+            <th>Size</th>
+            <th>Company Website</th>
+            <th>Company Linkdln</th>
+            <th>Contacts</th>
+            <th>Opportunities</th>
+            <th>Hq address</th>
+            <th>Map cache</th>
+          </tr>
+        </thead>
+        <tbody class="table">
+        </tbody>
+      </table>
+    </div>
+</body>
 
-    // Selecciona el elemento de entrada de texto con el atributo "placeholder"
-    var inputElement = $('input[placeholder]');
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
 
-    // Establecer el tamaño del placeholder utilizando el método css()
-    inputElement.css('width', '100%');
+<script src="https://code.jquery.com/jquery-3.3.1.js"></script>
+<script src="https://cdn.datatables.net/1.10.20/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/fixedheader/3.1.6/js/dataTables.fixedHeader.min.js"></script> 
 
-   
+<script>
+    const baseId = 'appTsErgl1kPnkWgl';
+    const apiKey = 'keykY5YjFxN23izT6';
+    const table = 'Accounts';
 
-   
+    const url = `https://api.airtable.com/v0/${baseId}/${table}`;
+    const headers = {
+        Authorization: `Bearer ${apiKey}`,
+        'Content-Type': 'application/json'
+    };
+
+    fetch(url, { headers })
+        .then(response => response.json())
+        .then(data => {
+            const tableBody = document.querySelector('#myTable tbody');
+            data.records.forEach(record => {
+                const fields = record.fields;
+                const row = tableBody.insertRow();
+                const nameCell = row.insertCell();
+                const industryCell = row.insertCell();
+                const sizeCell = row.insertCell();
+                const company_websiteCell = row.insertCell();
+                const company_linkdlnCell = row.insertCell();
+                const contactsCell = row.insertCell();
+                const opportunitiesCell = row.insertCell();
+                const hq_addressCell = row.insertCell();
+                const map_cacheCell = row.insertCell();
+
+                nameCell.innerHTML = fields.Name;
+                industryCell.innerHTML = fields.Industry;
+                sizeCell.innerHTML = fields.Size;
+                company_websiteCell.innerHTML = fields.Company_website;
+                company_linkdlnCell.innerHTML = fields.Company_Linkdln;
+                contactsCell.innerHTML = fields.Contacts;
+                opportunitiesCell.innerHTML = fields.Opportunities;
+                hq_addressCell.innerHTML = fields.HQ_address;
+                map_cacheCell.innerHTML = fields.Map_cache;
+                
+            });
+        });
+
+
+$(document).ready(function(){
+    var table = $('#myTable').DataTable({
+       orderCellsTop: true,
+       fixedHeader: true 
+    });
+
+    //Creamos una fila en el head de la tabla y lo clonamos para cada columna
+    $('#myTable thead tr').clone(true).appendTo( '#myTable thead' );
+
+    $('#myTable thead tr:eq(1) th').each( function (i) {
+        var title = $(this).text(); //es el nombre de la columna
+        $(this).html( '<input type="text" placeholder="Search...'+title+'" />' );
+ 
+        $( 'input', this ).on( 'keyup change', function () {
+            if ( table.column(i).search() !== this.value ) {
+                table
+                    .column(i)
+                    .search( this.value )
+                    .draw();
+            }
+        } );
+    } );   
 });
-        
-$('.fila').click(function() {
-  // Remueve la clase 'seleccionada' de todas las filas
-  $('.fila').removeClass('seleccionada');
 
-  // Agrega la clase 'seleccionada' a la fila que fue clickeada
-  $(this).addClass('seleccionada');
-  
-});
-
-
-
+      
 
 </script>
-
-</body>
 </html>
 
